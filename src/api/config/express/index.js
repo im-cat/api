@@ -4,9 +4,9 @@ import compression from 'compression'
 import morgan from 'morgan'
 import jsend from 'jsend'
 import bodyParser from 'body-parser'
-import { errorHandler as queryErrorHandler } from 'querymen'
-import { errorHandler as bodyErrorHandler } from 'bodymen'
-import { env } from '../index'
+import {errorHandler as queryErrorHandler} from 'querymen'
+import {errorHandler as bodyErrorHandler} from 'bodymen'
+import {env} from '../index'
 
 export default (apiRoot, routes) => {
   const app = express()
@@ -18,7 +18,7 @@ export default (apiRoot, routes) => {
     app.use(morgan('dev'))
   }
 
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.urlencoded({extended: false}))
   app.use(bodyParser.json())
   app.use(jsend.middleware)
   app.use(apiRoot, routes)
