@@ -3,6 +3,6 @@ import {login} from './controller'
 
 const router = new Router()
 
-router.post('/login', login)
+router.post('/', login)
 
 export default router

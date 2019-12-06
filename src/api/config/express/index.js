@@ -6,7 +6,7 @@ import jsend from 'jsend'
 import bodyParser from 'body-parser'
 import { errorHandler as queryErrorHandler } from 'querymen'
 import { errorHandler as bodyErrorHandler } from 'bodymen'
-import { env } from '../../config'
+import { env } from '../index'
 
 export default (apiRoot, routes) => {
   const app = express()
@@ -20,8 +20,8 @@ export default (apiRoot, routes) => {
 
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
-  app.use(apiRoot, routes)
   app.use(jsend.middleware)
+  app.use(apiRoot, routes)
   app.use(queryErrorHandler())
   app.use(bodyErrorHandler())
 

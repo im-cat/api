@@ -1,8 +1,8 @@
 import http from 'http'
-import {env, port, ip, apiRoot, syncForce, syncModels} from './config'
-import express from './services/express'
-import {sequelize} from './services/sequelize'
-import api from './api'
+import {env, port, ip, apiRoot, syncForce, syncModels} from 'api/config'
+import express from 'api/config/express'
+import {sequelize} from 'api/config/sequelize'
+import api from './api/web/router'
 
 const app = express(apiRoot, api)
 const server = http.createServer(app)

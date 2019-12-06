@@ -14,12 +14,12 @@ const requireProcessEnv = (name) => {
 if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv-safe')
   dotenv.load({
-    path: path.join(__dirname, '../.env'),
-    sample: path.join(__dirname, '../.env.example')
+    path: path.join(__dirname, '../../../.env'),
+    sample: path.join(__dirname, '../../../.env.example')
   })
 }
 
-const config = {
+const index = {
   all: {
     env: process.env.NODE_ENV || 'test',
     root: path.join(__dirname, '..'),
@@ -68,5 +68,5 @@ const config = {
   },
 }
 
-module.exports = merge(config.all, config[config.all.env])
+module.exports = merge(index.all, index[index.all.env])
 export default module.exports
