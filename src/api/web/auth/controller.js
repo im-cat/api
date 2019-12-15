@@ -7,7 +7,7 @@ export const login = async (req, res, next) => {
     const memberService = new MemberService()
     const token = await memberService.login(loginId)
 
-    return success(res, 201)({token})
+    return success(res, 200)({token})
   } catch (e) {
     next(e)
   }
