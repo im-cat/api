@@ -12,11 +12,9 @@ export const createMainArticle = async (req, res, next) => {
 
     return success(res, 201)({...result})
   } catch (err) {
-
     if (err instanceof TagCreationException || TabooException || ArticleCreationException) {
       badRequest(res, {code: 400, message: err.message})
     }
-
     next(err)
   }
 }

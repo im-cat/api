@@ -8,12 +8,12 @@ test('금기어가 존재하는지 확인할 수 있다.', async () => {
   const tabooDomain = new TabooDomain(new FakeTabooDao())
 
   // when
-  const tabooInfo1 = await tabooDomain.isExistTaboo(hashtags)
-  const tabooInfo2 = await tabooDomain.isExistTaboo(title)
+  const actual1 = await tabooDomain.isExistTaboo(hashtags)
+  const actual2 = await tabooDomain.isExistTaboo(title)
 
   // then
-  expect(tabooInfo1).toBe(true)
-  expect(tabooInfo2).toBe(false)
+  expect(actual1).toBe(true)
+  expect(actual2).toBe(false)
 })
 
 class FakeTabooDao {

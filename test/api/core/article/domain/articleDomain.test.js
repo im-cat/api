@@ -14,12 +14,12 @@ test('아티클을 생성할 수 있다.', async () => {
   const articleDomain = new ArticleDomain(new FakeArticleDao())
 
   // when
-  const articleInfo = await articleDomain.createArticle(articleData)
+  const actual = await articleDomain.createArticle(articleData)
 
   // then
-  expect(articleInfo).not.toBeNull()
-  expect(articleInfo).not.toBeUndefined()
-  expect(articleInfo.title).toBe(articleData.title)
+  expect(actual).not.toBeNull()
+  expect(actual).not.toBeUndefined()
+  expect(actual.title).toBe(articleData.title)
 })
 
 class FakeArticleDao {

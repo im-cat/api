@@ -8,12 +8,12 @@ test('아티클 카운트 정보를 생성할 수 있다.', async () => {
   const articleCountDomain = new ArticleCountDomain(new FakeArticleCountDao())
 
   // when
-  const articleCountInfo = await articleCountDomain.createArticleCount(articleId)
+  const actual = await articleCountDomain.createArticleCount(articleId)
 
   // then
-  expect(articleCountInfo).not.toBeNull()
-  expect(articleCountInfo).not.toBeUndefined()
-  expect(articleCountInfo.articleId).toBe(articleId)
+  expect(actual).not.toBeNull()
+  expect(actual).not.toBeUndefined()
+  expect(actual.articleId).toBe(articleId)
 })
 
 class FakeArticleCountDao {
