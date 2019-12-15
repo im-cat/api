@@ -13,7 +13,7 @@ export default sequelize => {
         autoIncrement: true
       },
       text: {
-        type: DataTypes.INTEGER(255).UNSIGNED,
+        type: DataTypes.STRING(100),
         allowNull: false,
         comment: '금기어'
       },

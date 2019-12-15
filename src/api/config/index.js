@@ -32,6 +32,7 @@ const index = {
     db: {
       options: {
         dialect: 'mysql',
+        timezone: '+09:00',
         logging: false,
         benchmark: false,
         retry: {

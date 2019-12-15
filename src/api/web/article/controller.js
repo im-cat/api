@@ -5,10 +5,10 @@ import {TabooException} from '../../core/article/domain/tabooException'
 import {ArticleCreationException} from '../../core/article/domain/articleCreationException'
 
 export const createMainArticle = async (req, res, next) => {
-  // TODO: memberId는 token > req.member
   try {
+    const memberId = req.user
     const articleService = new ArticleService()
-    const result = await articleService.createNewArticle(req.body)
+    const result = await articleService.createNewArticle(memberId, req.body)
 
     return success(res, 201)({...result})
   } catch (err) {

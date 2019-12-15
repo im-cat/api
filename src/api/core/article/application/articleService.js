@@ -11,8 +11,8 @@ import {TabooException} from '../domain/tabooException'
 
 export class ArticleService {
 
-  async createNewArticle (newArticleReqData){
-    const {memberId, title, mainText, letterNumber, finishCondition, tags} = newArticleReqData
+  async createNewArticle (memberId, newArticleReqData){
+    const {title, mainText, letterNumber, finishCondition, tags} = newArticleReqData
 
     await _checkTaboo(title)
     await _checkTaboo(tags)
