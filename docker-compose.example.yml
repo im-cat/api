@@ -1,8 +1,8 @@
 version: '3'
 services:
-  sanggye:
+  munchkin:
     image: munchkin:latest
-    container_name: api
+    container_name: munchkin_api
     command: npm run dev
     volumes:
       - ./src:/home/node/api/src
@@ -23,7 +23,7 @@ services:
 
   db:
     image: mysql:8
-    container_name: mysql
+    container_name: munchkin_mysql
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode=''
     restart: always
     ports:
