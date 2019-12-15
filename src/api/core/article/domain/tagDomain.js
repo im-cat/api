@@ -6,6 +6,8 @@ export class TagDomain {
   }
 
   async createTag (tags, articleId) {
+    tags = [...new Set(tags)]
+
     if (tags.length > 5) {
       throw new TagCreationException()
     }
