@@ -3,16 +3,17 @@ import {TabooDomain} from '../../../../../src/api/core/article/domain/tabooDomai
 test('금기어가 존재하는지 확인할 수 있다.', async () => {
 
   // given
-  const taboo = '금기어'
+  const hashtags = ['금기어', '테스트', '테스트2']
+  const title = '테스트 입니다'
   const tabooDomain = new TabooDomain(new FakeTabooDao())
 
   // when
-  const tabooInfo = await tabooDomain.isExistTaboo(taboo)
+  const tabooInfo1 = await tabooDomain.isExistTaboo(hashtags)
+  const tabooInfo2 = await tabooDomain.isExistTaboo(title)
 
   // then
-  expect(tabooInfo).not.toBeNull()
-  expect(tabooInfo).not.toBeUndefined()
-  expect(tabooInfo).toBe(true)
+  expect(tabooInfo1).toBe(true)
+  expect(tabooInfo2).toBe(false)
 })
 
 class FakeTabooDao {

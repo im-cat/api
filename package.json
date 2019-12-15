@@ -9,10 +9,9 @@
     "coverage": "npm test -- --coverage",
     "postcoverage": "opn coverage/lcov-report/index.html",
     "dev": "nodemon -i \"*.test.js\" .",
-    "prod": "cross-env NODE_ENV=production nodemon -i \"*.test.js\" -r dotenv-safe/config .",
+    "prod": "pm2-runtime process.yml",
     "lint": "eslint src",
-    "docs": "apidoc -i src -o docs && apidoc-markdown -p docs -o DOCS.md",
-    "postdocs": "opn docs/index.html"
+    "docs": "apidoc -i src -o docs && apidoc-markdown -p docs -o DOCS.md"
   },
   "jest": {
     "testEnvironment": "node",
@@ -53,7 +52,6 @@
     "@babel/register": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "app-module-path": "^2.2.0",
-    "bcrypt": "^3.0.7",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "bodymen": "^1.0.3",
@@ -71,6 +69,6 @@
     "rand-token": "^0.4.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "sequelize": "^5.19.3"
+    "sequelize": "^5.21.3"
   }
 }

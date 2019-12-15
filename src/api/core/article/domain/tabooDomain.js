@@ -4,9 +4,18 @@ export class TabooDomain {
   }
 
   async isExistTaboo (text) {
-    const tabooInfo = await this.dao.findByText(text, {raw: true})
+    let tabooInfo = []
 
-    if (tabooInfo) {
+    if (typeof text === 'string') {
+      text = text.split(' ')
+    }
+
+    for (const item of text) {
+      const taboo = await this.dao.findByText(item, {raw: true})
+      taboo ? tabooInfo.push(true) : tabooInfo.push(false)
+    }
+
+    if (tabooInfo.includes(true)) {
       return true
     }
 

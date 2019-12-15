@@ -13,13 +13,14 @@ export default sequelize => {
         autoIncrement: true
       },
       text: {
-        type: DataTypes.INTEGER(255).UNSIGNED,
+        type: DataTypes.STRING(100),
         allowNull: false,
         comment: '태그명'
       },
       taggedCount: {
         type: DataTypes.INTEGER(11).UNSIGNED,
         allowNull: false,
+        defaultValue: 1,
         comment: '태깅 횟수'
       },
       createdAt: {

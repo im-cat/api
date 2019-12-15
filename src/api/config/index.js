@@ -21,8 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const index = {
   all: {
-    env: process.env.NODE_ENV || 'test',
-    root: path.join(__dirname, '..'),
+    env: process.env.NODE_ENV || 'development',
     port: process.env.PORT || 9000,
     ip: process.env.IP || '0.0.0.0',
     apiRoot: process.env.API_ROOT || '',
@@ -33,27 +32,18 @@ const index = {
     db: {
       options: {
         dialect: 'mysql',
-        timezone: 'Asia/Seoul',
         logging: false,
         benchmark: false,
         retry: {
           match: [/SequelizeConnectionError/],
-          max: 2,
+          max: 5,
         },
       },
     },
   },
-  test: {
+  development: {
     syncModels: true,
     syncForce: true,
-    db: {
-      uri: requireProcessEnv('DB_URI'),
-      options: {
-        logging: console.log
-      }
-    },
-  },
-  development: {
     db: {
       uri: requireProcessEnv('DB_URI'),
       options: {

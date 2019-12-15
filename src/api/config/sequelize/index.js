@@ -3,7 +3,7 @@ import {createContext} from 'dataloader-sequelize'
 import glob from 'glob'
 import {forEach, isArray} from 'lodash'
 import Sequelize from 'sequelize'
-import {db} from '../index'
+import {db} from '../../config'
 
 let sequelize
 

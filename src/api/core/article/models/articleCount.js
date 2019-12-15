@@ -18,12 +18,12 @@ export default sequelize => {
         comment: '아티클 번호'
       },
       viewCount: {
-        type: DataTypes.DATE,
+        type: DataTypes.INTEGER(11).UNSIGNED,
         allowNull: false,
         comment: '뷰 카운트'
       },
       wishCount: {
-        type: DataTypes.DATE,
+        type: DataTypes.INTEGER(11).UNSIGNED,
         allowNull: false,
         comment: '좋아요 카운트'
       }

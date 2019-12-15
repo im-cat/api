@@ -1,11 +1,18 @@
 import http from 'http'
-import {env, port, ip, apiRoot, syncForce, syncModels} from 'api/config'
-import express from 'api/config/express'
-import {sequelize} from 'api/config/sequelize'
+import {env, port, ip, apiRoot, syncForce, syncModels} from '../src/api/config'
+import express from '../src/api/config/express'
+import {sequelize} from '../src/api/config/sequelize/index'
 import api from './api/web/router'
 
 const app = express(apiRoot, api)
 const server = http.createServer(app)
+
+function dbInit () {
+  if (env === 'production') {
+    return null
+  }
+  return syncModels ? sequelize.sync({force: syncForce}) : Promise.resolve()
+}
 
 function startServer () {
   server.on('clientError', (err, socket) => {
@@ -20,11 +27,12 @@ function startServer () {
       console.log('Express server listening on http://%s:%d, in %s mode', ip, port, env)
     })
   })
+  return null
 }
 
 sequelize
   .authenticate()
-  .then(() => (syncModels ? sequelize.sync({force: syncForce}) : Promise.resolve()))
+  .then(dbInit)
   .then(startServer)
   .catch(err => {
     // eslint-disable-next-line no-console
