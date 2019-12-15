@@ -41,3 +41,32 @@ test(npm run test), lint(npm run lint)는 커밋 전에 로컬에서 하신 후�
 
 - dev: default branch 개발 브랜치 입니다. 개발은 이 브랜치에서 해주세요.
 - master: production branch
+
+## Directory structure
+
+```
+└── src
+    └── api
+        ├── common
+        │   ├── jwt
+        │   ├── passport
+        │   └── response
+        ├── config
+        │   ├── express
+        │   └── sequelize
+        ├── core
+        │   ├── article
+        │   │   ├── application
+        │   │   ├── domain
+        │   │   ├── infrastructure
+        │   │   └── models
+        │   └── member
+        │       ├── application
+        │       ├── domain
+        │       ├── infrastructure
+        │       └── models
+        └── web
+            ├── article
+            ├── auth
+            └── member
+```
