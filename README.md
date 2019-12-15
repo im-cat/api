@@ -1,6 +1,9 @@
 # munchkin
 - I'm cat API Server
 
+## API docs
+- [WIKI](https://github.com/im-cat/munchkin/wiki) 
+
 ## Playing locally
 
 로컬에서 띄우기 위해 준비해야 할 것은 다음과 같습니다.
