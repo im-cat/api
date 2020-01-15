@@ -1,10 +1,10 @@
-import {MemberTokenDomain} from '../../../../../src/api/core/member/domain/memberTokenDomain'
+import {MemberToken} from '../../../../../src/api/core/member/domain/MemberToken'
 import Moment from 'moment'
 
 test('멤버 토큰을 생성할 수 있다.', async () => {
   // given
   const memberId = 2
-  const memberTokenDomain = new MemberTokenDomain(new FakeMemberTokenDao())
+  const memberTokenDomain = new MemberToken(new FakeMemberTokenDao())
   const expireAt = Moment(new Date()).add(1, 'year')
 
   // when
@@ -19,7 +19,7 @@ test('멤버 토큰의 마감 기한을 수정할 수 있다.', async () => {
   // given
   const memberId = 1
   const fakeMemberTokenDao = new FakeMemberTokenDao()
-  const memberTokenDomain = new MemberTokenDomain(fakeMemberTokenDao)
+  const memberTokenDomain = new MemberToken(fakeMemberTokenDao)
   const expireAt = Moment(new Date()).add(1, 'year')
 
   // when

@@ -1,4 +1,4 @@
-import {ArticleDomain} from '../../../../../src/api/core/article/domain/articleDomain'
+import {Article} from '../../../../../src/api/core/article/domain/Article'
 
 test('아티클을 생성할 수 있다.', async () => {
 
@@ -11,7 +11,7 @@ test('아티클을 생성할 수 있다.', async () => {
     finishCondition: 10
   }
 
-  const articleDomain = new ArticleDomain(new FakeArticleDao())
+  const articleDomain = new Article(new FakeArticleDao())
 
   // when
   const actual = await articleDomain.createArticle(articleData)

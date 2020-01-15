@@ -1,6 +1,6 @@
 import passport from 'passport'
 import {Strategy} from 'passport-http-bearer'
-import {getAccessToken} from '../../core/member/models/memberToken'
+import {getAccessToken} from '../../infrastructure/sequelize/models/MemberToken'
 
 passport.use('token', new Strategy((accessToken, done) => {
   getAccessToken(accessToken)
