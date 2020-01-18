@@ -1,5 +1,6 @@
-import {MemberToken} from '../domain/MemberToken'
 import Moment from 'moment'
+import {sign} from '../../../common/jwt'
+import {MemberToken} from '../domain/MemberToken'
 
 export default class MemberService {
   constructor ({sequelizeMemberRepository, sequelizeMemberTokenRepository}) {
@@ -8,22 +9,29 @@ export default class MemberService {
   }
 
   async login (loginId) {
-    const memberInfo = await this.memberRepository.findByLoginId(loginId, {raw: true})
+    try {
+      const member = await this.memberRepository.findMemberByLoginId(loginId)
+      const expireAt = Moment(new Date()).add(1, 'year')
 
-    console.log(memberInfo)
+      if (member) {
+        const memberToken = await this.memberTokenRepository.updateMemberTokenExpire(member.memberId, expireAt)
+        return memberToken.accessToken
+      }
 
-    const memberTokenDomain = new MemberToken(this.memberTokenRepository)
-    const expireAt = Moment(new Date()).add(1, 'year')
+      const newMember = await this.memberRepository.createMember(loginId)
 
-    let token
+      const newToken = await sign(newMember.memberId)
 
-    if (memberInfo) {
-      token = await memberTokenDomain.updateMemberTokenExpire(memberInfo.memberId, expireAt)
-    } else {
-      const member = await this.memberRepository.createMember(loginId)
-      token = await memberTokenDomain.createMemberToken(member.memberId, expireAt)
+      const memberToken = new MemberToken({
+        memberId: newMember.memberId,
+        accessToken: newToken,
+        expireAt
+      })
+      const newMemberToken = await this.memberTokenRepository.createMemberToken(memberToken)
+
+      return newMemberToken.accessToken
+    } catch (error) {
+      throw error
     }
-
-    return token
   }
 }
