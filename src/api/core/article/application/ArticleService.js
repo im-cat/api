@@ -1,44 +1,54 @@
 import {Article} from '../domain/Article'
 import {ArticleCount} from '../domain/ArticleCount'
-import {Taboo} from '../domain/Taboo'
-import {Tag} from '../domain/Tag'
-import {TabooException} from '../domain/TabooException'
+import {TabooException} from '../domain/taboo/TabooException'
 
 export default class ArticleService {
-  constructor ({sequelizeArticleRepository, sequelizeTabooRepository, sequelizeTagRepository}) {
+  constructor ({sequelizeArticleRepository, sequelizeTabooRepository, sequelizeArticleCountRepository, tagService}) {
     this.articleRepository = sequelizeArticleRepository
     this.tabooRepository = sequelizeTabooRepository
-    this.tagRepository = sequelizeTagRepository
+    this.articleCountRepository = sequelizeArticleCountRepository
+    this.tagService = tagService
   }
 
   async createNewArticle (memberId, newArticleReqData) {
-    const {title, mainText, letterNumber, finishCondition, tags} = newArticleReqData
+    try {
+      const {title, mainText, letterNumber, finishCondition, tags} = newArticleReqData
 
-    await this._checkTaboo(title)
-    await this._checkTaboo(tags)
+      await this._checkTaboo(title)
+      await this._checkTaboo(tags)
 
-    const articleData = {memberId, title, mainText, letterNumber, finishCondition}
+      const article = new Article({memberId, title, mainText, letterNumber, finishCondition})
+      const newArticle = await this.articleRepository.createArticle(article)
 
-    const articleDomain = new Article(this.articleRepository)
-    const articleInfo = await articleDomain.createArticle(articleData)
+      const {articleId} = newArticle
 
-    const articleId = articleInfo.articleId
+      const articleCountDomain = new ArticleCount({articleId})
+      await this.articleCountRepository.createArticleCount(articleCountDomain)
 
-    const articleCountDomain = new ArticleCount(this.articleRepository)
-    await articleCountDomain.createArticleCount(articleId)
+      const generatedTags = await this.tagService.createTag(tags, articleId)
 
-    const tagDomain = new Tag(this.tagRepository)
-    await tagDomain.createTag(tags, articleId)
-
-    return articleInfo
+      return {...newArticle.attributes, tags: generatedTags}
+    } catch (error) {
+      throw error
+    }
   }
 
   _checkTaboo = async (text) => {
-    const tabooDomain = new Taboo(this.tabooRepository)
-    const isExistTaboo = await tabooDomain.isExistTaboo(text)
+    try {
+      let splitText = text
 
-    if (isExistTaboo) {
-      throw new TabooException()
+      if (typeof text === 'string') {
+        splitText = text.split(' ')
+      }
+
+      for (const text of splitText) {
+        const taboo = await this.tabooRepository.findByText(text)
+        if (taboo) {
+          throw new TabooException()
+        }
+      }
+    } catch (error) {
+      throw error
     }
   }
 }

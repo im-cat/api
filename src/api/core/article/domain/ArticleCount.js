@@ -1,14 +1,12 @@
-export class ArticleCount {
-  constructor (dao) {
-    this.dao = dao
-  }
+import {attributes} from 'structure'
 
-  createArticleCount (articleId) {
-    const articleCountData = {
-      articleId,
-      viewCount: 0,
-      wishCount: 0
-    }
-    return this.dao.createArticleCount(articleCountData)
-  }
-}
+export const ArticleCount = attributes({
+  articleCountId: {type: Number},
+  articleId: {type: Number, required: true},
+  viewCount: {type: String},
+  wishCount: {type: String},
+  createdAt: {type: Date},
+  updatedAt: {type: Date},
+  deletedAt: {type: Date},
+})(class ArticleCount {
+})

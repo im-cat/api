@@ -1,9 +1,8 @@
 import {route, POST, before} from 'awilix-express'
 import {badRequest, success} from '../../response'
 import {token} from '../../../common/passport'
-import {TagCreationException} from '../../../core/article/domain/TagCreationException'
-import {TabooException} from '../../../core/article/domain/TabooException'
-import {ArticleCreationException} from '../../../core/article/domain/ArticleCreationException'
+import Status from 'http-status'
+import {ArticleSerializer} from './ArticleSerializer'
 
 @route('/articles')
 export default class ArticleController {
@@ -18,12 +17,13 @@ export default class ArticleController {
       const memberId = req.user
       const result = await this.articleService.createNewArticle(memberId, req.body)
 
-      return success(res, 201)({...result})
-    } catch (err) {
-      if (err instanceof TagCreationException || TabooException || ArticleCreationException) {
-        badRequest(res, {code: 400, message: err.message})
+      return success(res, Status.CREATED)(ArticleSerializer.serialize(result))
+    } catch (error) {
+      if (error.message === 'ValidationError') {
+        return badRequest(res, {code: Status.BAD_REQUEST, message: error.details})
       }
-      next(err)
+
+      next(error)
     }
   }
 }

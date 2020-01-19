@@ -27,7 +27,7 @@ container.register({
 container.loadModules(
   [
     'core/**/application/*Service.js',
-    'core/**/infrastructure/*Repository.js',
+    'core/**/infrastructure/**/*Repository.js',
   ], {
     formatName: 'camelCase',
     register: asClass,

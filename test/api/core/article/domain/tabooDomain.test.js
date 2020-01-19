@@ -1,4 +1,4 @@
-import {Taboo} from '../../../../../src/api/core/article/domain/Taboo'
+import {Taboo} from '../../../../../src/api/core/article/domain/taboo/Taboo'
 
 test('금기어가 존재하는지 확인할 수 있다.', async () => {
 

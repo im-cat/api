@@ -1,22 +1,14 @@
-import {ArticleCreationException} from './ArticleCreationException'
+import {attributes} from 'structure'
 
-export class Article {
-  constructor (dao) {
-    this.dao = dao
-  }
-
-  createArticle (articleData) {
-    const {
-      title,
-      mainText,
-      letterNumber,
-      finishCondition
-    } = articleData
-
-    if (!title || !mainText || !letterNumber || !finishCondition) {
-      throw new ArticleCreationException()
-    }
-
-    return this.dao.createArticle(articleData)
-  }
-}
+export const Article = attributes({
+  articleId: {type: Number},
+  memberId: {type: Number, required: true},
+  title: {type: String, required: true},
+  mainText: {type: String, required: true},
+  letterNumber: {type: Number, required: true},
+  finishCondition: {type: String, required: true},
+  createdAt: {type: Date},
+  updatedAt: {type: Date},
+  deletedAt: {type: Date},
+})(class Article {
+})

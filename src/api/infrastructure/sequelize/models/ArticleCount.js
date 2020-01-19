@@ -20,11 +20,13 @@ export default sequelize => {
       viewCount: {
         type: DataTypes.INTEGER(11).UNSIGNED,
         allowNull: false,
+        defaultValue: 0,
         comment: '뷰 카운트'
       },
       wishCount: {
         type: DataTypes.INTEGER(11).UNSIGNED,
         allowNull: false,
+        defaultValue: 0,
         comment: '좋아요 카운트'
       }
     }, {

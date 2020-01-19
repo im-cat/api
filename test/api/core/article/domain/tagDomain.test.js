@@ -1,4 +1,4 @@
-import {Tag} from '../../../../../src/api/core/article/domain/Tag'
+import {Tag} from '../../../../../src/api/core/article/domain/tag/Tag'
 
 test('태그를 생성할 수 있다.', async () => {
   // given

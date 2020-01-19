@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 const index = {
   all: {
     env: process.env.NODE_ENV || 'development',
-    port: process.env.PORT || 9000,
+    port: process.env.PORT || 9002,
     ip: process.env.IP || '0.0.0.0',
     apiRoot: process.env.API_ROOT || '',
     syncModels: process.env.SYNC_MODELS || false,
@@ -53,8 +53,8 @@ const index = {
     },
   },
   development: {
-    syncModels: true,
-    syncForce: true,
+    syncModels: false,
+    syncForce: false,
     db: {
       uri: requireProcessEnv('DB_URI'),
       options: {

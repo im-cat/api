@@ -28,13 +28,13 @@ export default sequelize => {
       },
       letterNumber: {
         type: DataTypes.INTEGER(5).UNSIGNED,
-        defaultValue: '50',
+        defaultValue: 50,
         allowNull: false,
         comment: '글자수'
       },
       finishCondition: {
         type: DataTypes.INTEGER(5).UNSIGNED,
-        defaultValue: '50',
+        defaultValue: 50,
         allowNull: false,
         comment: '글 완료 조건'
       },
