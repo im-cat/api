@@ -33,6 +33,21 @@ export default class SequelizeArticleRepository {
     }
   }
 
+  async findArticleById (id) {
+    try {
+      return await this.articleModel.findByPk(id, {rejectOnEmpty: true})
+    } catch (error) {
+      if (error.name === 'SequelizeEmptyResultError') {
+        const notFoundError = new Error('NotFoundError')
+        notFoundError.details = `Article id ${id} can't be found.`
+
+        throw notFoundError
+      }
+
+      throw error
+    }
+  }
+
   _createConditionByType (start, count, type) {
     let order = {}
     if (upperCase(type) === VIEW_TYPE.FINISH) {
