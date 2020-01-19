@@ -16,18 +16,9 @@ export default class SequelizeArticleRepository {
   async findAndCountAllArticle (start, count, type) {
     try {
 
-      const order = this._createConditionByType(type)
+      const condition = this._createConditionByType(start, count, type)
 
-      const {count: total, rows} = await this.articleCountModel.findAndCountAll({
-        attributes: ['viewCount', 'wishCount'],
-        include: [{
-          attributes: {exclude: ['letterNumber', 'finishCondition']},
-          model: this.articleModel,
-        }],
-        ...order,
-        offset: start,
-        limit: count,
-      })
+      const {count: total, rows} = await this.articleCountModel.findAndCountAll({...condition})
 
       return {
         items: rows.map(row => {
@@ -42,13 +33,29 @@ export default class SequelizeArticleRepository {
     }
   }
 
-  _createConditionByType (type) {
+  _createConditionByType (start, count, type) {
+    let order = {}
+    if (upperCase(type) === VIEW_TYPE.FINISH) {
+      order = {order: [[this.articleModel, 'updatedAt', 'DESC']]}
+    }
+
     if (upperCase(type) === VIEW_TYPE.VIEW) {
-      return {order: [['viewCount', 'DESC']]}
+      order = {order: [['viewCount', 'DESC']]}
     }
 
     if (upperCase(type) === VIEW_TYPE.WISH) {
-      return {order: [['wishCount', 'DESC']]}
+      order = {order: [['wishCount', 'DESC']]}
+    }
+
+    return {
+      attributes: ['viewCount', 'wishCount'],
+      include: [{
+        attributes: {exclude: ['letterNumber', 'finishCondition']},
+        model: this.articleModel,
+      }],
+      ...order,
+      offset: start,
+      limit: count,
     }
   }
 }

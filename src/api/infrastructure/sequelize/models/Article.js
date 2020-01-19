@@ -42,6 +42,12 @@ export default sequelize => {
         allowNull: false,
         comment: '글 완료 조건'
       },
+      isFinish: {
+        type: DataTypes.TINYINT(1).UNSIGNED,
+        defaultValue: 0,
+        allowNull: false,
+        comment: '글 완료 여부'
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false

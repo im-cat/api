@@ -7,6 +7,7 @@ export const Article = attributes({
   mainText: {type: String, required: true},
   letterNumber: {type: Number, required: true},
   finishCondition: {type: String, required: true},
+  isFinish: {type: Number},
   createdAt: {type: Date},
   updatedAt: {type: Date},
   deletedAt: {type: Date},
