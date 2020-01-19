@@ -35,7 +35,9 @@ export default class SequelizeArticleRepository {
 
   async findArticleById (id) {
     try {
-      return await this.articleModel.findByPk(id, {rejectOnEmpty: true})
+      const article = await this.articleModel.findByPk(id, {rejectOnEmpty: true})
+
+      return articleMapper.toEntity(article)
     } catch (error) {
       if (error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError')

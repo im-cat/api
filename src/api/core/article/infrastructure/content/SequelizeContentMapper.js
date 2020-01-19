@@ -1,4 +1,4 @@
-import {Content} from '../../domain/Content'
+import {Content} from '../../domain/content/Content'
 
 export const SequelizeContentMapper = {
   toEntity ({dataValues}) {

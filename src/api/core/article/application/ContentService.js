@@ -1,4 +1,4 @@
-import {Content} from '../domain/Content'
+import {Content} from '../domain/content/Content'
 
 export default class ContentService {
   constructor ({sequelizeContentRepository, sequelizeArticleRepository}) {
@@ -8,11 +8,12 @@ export default class ContentService {
 
   createNewContent = async (memberId, contentReqData) => {
     try {
-      // 존재하는 아티클인지 확인 필요
       const {articleId} = contentReqData
-      await this.articleRepository.findArticleById(articleId)
+      const article = await this.articleRepository.findArticleById(articleId)
 
       const content = new Content(Object.assign(contentReqData, {memberId}))
+      content.checkTheNumberOfLetters(article.letterNumber)
+
       const newContent = await this.contentRepository.createContent(content)
 
       return newContent

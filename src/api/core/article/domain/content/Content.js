@@ -1,4 +1,5 @@
 import {attributes} from 'structure'
+import {ContentLengthExceedException} from './ContentLengthExceedException'
 
 export const Content = attributes({
   contentId: {type: Number},
@@ -10,4 +11,9 @@ export const Content = attributes({
   updatedAt: {type: Date},
   deletedAt: {type: Date},
 })(class Content {
+  checkTheNumberOfLetters (letterNumberCondition) {
+    if (letterNumberCondition < this.content.length) {
+      throw new ContentLengthExceedException(letterNumberCondition)
+    }
+  }
 })
