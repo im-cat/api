@@ -1,6 +1,9 @@
 import {Model, DataTypes} from 'sequelize'
 
 export class ArticleCount extends Model {
+  static associate (models) {
+    this.belongsTo(models.Article, {foreignKey: 'articleId', constraints: false})
+  }
 }
 
 export default sequelize => {

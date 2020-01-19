@@ -1,6 +1,10 @@
 import {Model, DataTypes} from 'sequelize'
 
 export class Article extends Model {
+
+  static associate (models) {
+    this.hasOne(models.ArticleCount, {foreignKey: 'articleId', constraints: false})
+  }
 }
 
 export default sequelize => {

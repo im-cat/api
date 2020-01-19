@@ -14,10 +14,19 @@ export default class ArticleService {
     try {
       const {title, mainText, letterNumber, finishCondition, tags} = newArticleReqData
 
+      const article = new Article({memberId, title, mainText, letterNumber, finishCondition})
+      const {valid, errors} = article.validate()
+
+      if (!valid) {
+        const error = new Error('ValidationError')
+        error.details = errors
+
+        throw error
+      }
+
       await this._checkTaboo(title)
       await this._checkTaboo(tags)
 
-      const article = new Article({memberId, title, mainText, letterNumber, finishCondition})
       const newArticle = await this.articleRepository.createArticle(article)
 
       const {articleId} = newArticle
@@ -28,6 +37,22 @@ export default class ArticleService {
       const generatedTags = await this.tagService.createTag(tags, articleId)
 
       return {...newArticle.attributes, tags: generatedTags}
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async findAllArticle (start, count, type) {
+    try {
+      const articles = await this.articleRepository.findAndCountAllArticle(start, count, type)
+
+      let result = {}
+      result.items = articles.items
+      result.total = articles.total
+      result.start = start
+      result.count = count
+
+      return result
     } catch (error) {
       throw error
     }
