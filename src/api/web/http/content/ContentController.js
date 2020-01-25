@@ -1,4 +1,4 @@
-import {route, POST, before, GET, PATCH} from 'awilix-express'
+import {route, POST, before, GET, PATCH, DELETE} from 'awilix-express'
 import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
@@ -71,13 +71,36 @@ export default class ContentController {
   @route('/:contentId')
   @PATCH()
   update = async (req, res, next) => {
-    try {
-      const memberId = req.user
-      const {contentId} = req.params
+    const memberId = req.user
+    const {contentId} = req.params
 
+    try {
       const result = await this.contentService.updateContent(memberId, contentId, req.body)
 
       return success(res, Status.OK)(ContentSerializer.serialize(result))
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
+      }
+
+      if (error.message === 'ValidationError') {
+        return badRequest(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
+  @route('/:contentId')
+  @DELETE()
+  delete = async (req, res, next) => {
+    const memberId = req.user
+    const {contentId} = req.params
+
+    try {
+      await this.contentService.deleteContent(memberId, contentId)
+
+      return res.status(Status.OK).end()
     } catch (error) {
       if (error.message === 'NotFoundError') {
         return notFound(res, {code: error.code, message: error.details})

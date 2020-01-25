@@ -51,8 +51,4 @@ export default class TagService {
 
     return tagTexts
   }
-
-  async deleteContent (articleId) {
-
-  }
 }

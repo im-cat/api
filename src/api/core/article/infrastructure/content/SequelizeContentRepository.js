@@ -112,4 +112,15 @@ export default class SequelizeContentRepository {
       throw error
     }
   }
+
+  async deleteContent (contentId) {
+    try {
+      const content = await this._getContent(contentId)
+      await content.destroy()
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import {Content} from '../domain/content/Content'
+import {ContentNoPermissionException} from '../domain/content/ContentNoPermissionException'
 
 export default class ContentService {
   constructor ({sequelizeContentRepository, sequelizeArticleRepository, sequelizeMemberRepository}) {
@@ -69,13 +70,29 @@ export default class ContentService {
       const content = await this.contentRepository.findContentById(contentId)
 
       if (memberId !== content.memberId) {
-        return null
+        return new ContentNoPermissionException()
       }
 
       const updatedContent = await this.contentRepository.updateContent(contentId, contentReqData)
       const member = await this.memberRepository.findMemberByMemberId(memberId)
 
       return {...updatedContent.attributes, member}
+    } catch (error) {
+      throw error
+    }
+  }
+
+  deleteContent = async (memberId, contentId) => {
+    try {
+      const content = await this.contentRepository.findContentById(contentId)
+
+      if (memberId !== content.memberId) {
+        return new ContentNoPermissionException()
+      }
+
+      await this.contentRepository.deleteContent(contentId)
+
+      return null
     } catch (error) {
       throw error
     }
