@@ -36,18 +36,10 @@ export default class SequelizeContentRepository {
 
   async findContentById (id) {
     try {
-      const content = await this.contentModel.findByPk(id, {rejectOnEmpty: true})
+      const content = await this._getContent(id)
 
       return contentMapper.toEntity(content)
     } catch (error) {
-      if (error.name === 'SequelizeEmptyResultError') {
-        const notFoundError = new Error('NotFoundError')
-        notFoundError.code = messages.E006.code
-        notFoundError.details = messages.E006.detail
-
-        throw notFoundError
-      }
-
       throw error
     }
   }
@@ -81,6 +73,43 @@ export default class SequelizeContentRepository {
     } catch (error) {
       throw error
     }
+  }
 
+  async _getContent (id) {
+    try {
+      return await this.contentModel.findByPk(id, {rejectOnEmpty: true})
+    } catch (error) {
+      if (error.name === 'SequelizeEmptyResultError') {
+        const notFoundError = new Error('NotFoundError')
+        notFoundError.code = messages.E006.code
+        notFoundError.details = messages.E006.detail
+
+        throw notFoundError
+      }
+
+      throw error
+    }
+  }
+
+  async updateContent (contentId, contentReqData) {
+    try {
+      const content = await this._getContent(contentId)
+
+      const updatedContent = await content.update(contentMapper.toDatabase(contentReqData))
+      const contentEntity = contentMapper.toEntity(updatedContent)
+
+      const {valid, errors} = contentEntity.validate()
+
+      if (!valid) {
+        const error = new Error('ValidationError')
+        error.details = errors
+
+        throw error
+      }
+
+      return contentEntity
+    } catch (error) {
+      throw error
+    }
   }
 }

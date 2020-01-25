@@ -63,4 +63,21 @@ export default class ContentService {
       throw error
     }
   }
+
+  updateContent = async (memberId, contentId, contentReqData) => {
+    try {
+      const content = await this.contentRepository.findContentById(contentId)
+
+      if (memberId !== content.memberId) {
+        return null
+      }
+
+      const updatedContent = await this.contentRepository.updateContent(contentId, contentReqData)
+      const member = await this.memberRepository.findMemberByMemberId(memberId)
+
+      return {...updatedContent.attributes, member}
+    } catch (error) {
+      throw error
+    }
+  }
 }
