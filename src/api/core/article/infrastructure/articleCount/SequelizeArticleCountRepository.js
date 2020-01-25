@@ -19,4 +19,12 @@ export default class SequelizeArticleCountRepository {
     const newArticleCount = await this.articleCountModel.create(articleCountMapper.toDatabase(articleCount))
     return articleCountMapper.toEntity(newArticleCount)
   }
+
+  incrementViewCount (articleId) {
+    return this.articleCountModel.increment('viewCount', {where: {articleId}})
+  }
+
+  findArticleCount (articleId, options = {}) {
+    return this.articleCountModel.findOne({attributes: ['viewCount', 'wishCount'], where: {articleId}, ...options})
+  }
 }

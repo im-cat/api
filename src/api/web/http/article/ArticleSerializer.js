@@ -59,5 +59,38 @@ export const ArticleSerializer = {
       updatedAt,
       deletedAt,
     }
+  },
+  serializeForDetail ({
+    articleId,
+    memberId,
+    title,
+    mainText,
+    letterNumber,
+    finishCondition,
+    isFinish,
+    wishCount,
+    viewCount,
+    createdAt,
+    updatedAt,
+    deletedAt
+  }) {
+    createdAt = convertDatetime(createdAt)
+    updatedAt = convertDatetime(updatedAt)
+    deletedAt = convertDatetime(deletedAt)
+
+    return {
+      articleId,
+      memberId,
+      title,
+      mainText,
+      letterNumber,
+      finishCondition,
+      isFinish,
+      wishCount,
+      viewCount,
+      createdAt,
+      updatedAt,
+      deletedAt,
+    }
   }
 }

@@ -27,4 +27,13 @@ export default class SequelizeTagRepository {
   createArticleTag (tagId, articleId) {
     return this.articleTagModel.create({tagId, articleId})
   }
+
+  findTagIdsByArticleId (articleId) {
+    return this.articleTagModel.findAll({attributes: ['tagId'], where: {articleId}, raw: true})
+  }
+
+  async findTagByTagIds (tagIds) {
+    const tags = await this.tagModel.findAll({where: {tagId: tagIds}})
+    return tags.map(tagMapper.toEntity)
+  }
 }

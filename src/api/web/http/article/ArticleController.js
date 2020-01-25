@@ -1,5 +1,5 @@
 import {route, POST, GET, before} from 'awilix-express'
-import {badRequest, success} from '../../response'
+import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {ArticleSerializer} from './ArticleSerializer'
@@ -44,6 +44,24 @@ export default class ArticleController {
 
       return success(res, Status.OK)(articles)
     } catch (error) {
+      next(error)
+    }
+  }
+
+  @route('/:articleId')
+  @GET()
+  show = async (req, res, next) => {
+    const {articleId} = req.params
+
+    try {
+      const result = await this.articleService.findByArticleId(Number(articleId))
+
+      return success(res, Status.OK)(ArticleSerializer.serializeForDetail(result))
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
+      }
+
       next(error)
     }
   }

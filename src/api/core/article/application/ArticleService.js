@@ -61,6 +61,28 @@ export default class ArticleService {
     }
   }
 
+  async findByArticleId (articleId) {
+    try {
+      const article = await this.articleRepository.findArticleById(articleId)
+
+      await this.articleCountRepository.incrementViewCount(articleId)
+      const articleCount = await this.articleCountRepository.findArticleCount(articleId, {useMaster: true, raw: true})
+
+      const articleTags = await this.tagService.findArticleTags(articleId)
+
+      const result = {
+        ...article.attributes,
+        ...articleCount,
+        tags: articleTags
+
+      }
+      
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
   _checkTaboo = async (text) => {
     try {
       let splitText = text

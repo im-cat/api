@@ -36,4 +36,19 @@ export default class TagService {
       throw error
     }
   }
+
+  async findArticleTags (articleId) {
+    const tagIds = await this.tagRepository
+      .findTagIdsByArticleId(articleId)
+      .map(i => i.tagId)
+
+    if (tagIds.length === 0) {
+      return []
+    }
+
+    const tags = await this.tagRepository.findTagByTagIds(tagIds)
+    const tagTexts = tags.map(tag => tag.text)
+
+    return tagTexts
+  }
 }
