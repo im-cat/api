@@ -104,6 +104,22 @@ export default class ArticleService {
     }
   }
 
+  async wishOrUnWishArticle (memberId, articleId) {
+    try {
+      const memberWishArticle = await this.articleRepository.findMemberWishArticle(memberId, articleId)
+
+      if (memberWishArticle) {
+        await this.articleRepository.unWishArticle(memberWishArticle)
+        return {deleted: true}
+      }
+
+      await this.articleRepository.wishArticle(memberId, articleId)
+      return {created: true}
+    } catch (error) {
+      throw error
+    }
+  }
+
   _checkTaboo = async (text) => {
     try {
       let splitText = text

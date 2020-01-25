@@ -83,4 +83,23 @@ export default class ArticleController {
     }
   }
 
+  @route('/:articleId/wish')
+  @POST()
+  wish = async (req, res, next) => {
+    const {articleId} = req.params
+    const memberId = req.user
+
+    try {
+      const result = await this.articleService.wishOrUnWishArticle(memberId, articleId)
+
+      return success(res, Status.OK)(result)
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
 }

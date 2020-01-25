@@ -87,6 +87,31 @@ export default class SequelizeArticleRepository {
     }
   }
 
+  findMemberWishArticle (memberId, articleId) {
+    try {
+      return this.memberWishArticleModel.findOne({where: {memberId, articleId}})
+    } catch (error) {
+      throw error
+    }
+  }
+
+  wishArticle (memberId, articleId) {
+    try {
+      return this.memberWishArticleModel.create({memberId, articleId})
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async unWishArticle (memberWishArticle) {
+    try {
+      await memberWishArticle.destroy()
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
+
   async _getArticleById (id) {
     try {
       return await this.articleModel.findByPk(id, {rejectOnEmpty: true})
