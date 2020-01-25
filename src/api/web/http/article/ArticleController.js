@@ -6,13 +6,13 @@ import {ArticleSerializer} from './ArticleSerializer'
 import {upperCase} from 'lodash'
 import {VIEW_TYPES} from '../../../common/viewType'
 
+@before(token({required: true}))
 @route('/articles')
 export default class ArticleController {
   constructor ({articleService}) {
     this.articleService = articleService
   }
 
-  @before(token({required: true}))
   @POST()
   createMainArticle = async (req, res, next) => {
     try {
@@ -22,14 +22,13 @@ export default class ArticleController {
       return success(res, Status.CREATED)(ArticleSerializer.serialize(result))
     } catch (error) {
       if (error.message === 'ValidationError') {
-        return badRequest(res, {code: Status.BAD_REQUEST, message: error.details})
+        return badRequest(res, {code: error.code, message: error.details})
       }
 
       next(error)
     }
   }
 
-  @before(token({required: true}))
   @GET()
   index = async (req, res, next) => {
     const start = Number(req.query.start) || 0
@@ -45,10 +44,6 @@ export default class ArticleController {
 
       return success(res, Status.OK)(articles)
     } catch (error) {
-      if (error.message === 'NotFoundError') {
-        return badRequest(res, {code: Status.NOT_FOUND, message: error.details})
-      }
-
       next(error)
     }
   }

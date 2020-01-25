@@ -1,7 +1,10 @@
+import messages from '../../../../common/messages/message'
+
 export class TabooException {
-  constructor (text) {
+  constructor () {
     const error = new Error('ValidationError')
-    error.details = `${text}는 금기어 입니다.`
+    error.code = messages.E004.code
+    error.details = messages.E004.detail
 
     throw error
   }

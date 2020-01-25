@@ -50,15 +50,8 @@ export default class SequelizeMemberTokenRepository {
 
   async _getMemberToken (memberId) {
     try {
-      return this.memberTokenModel.findOne({where: {memberId}, rejectOnEmpty: true})
+      return this.memberTokenModel.findOne({where: {memberId}})
     } catch (error) {
-      if (error.name === 'SequelizeEmptyResultError') {
-        const notFoundError = new Error('NotFoundError')
-        notFoundError.details = `MemberToken memberId ${memberId} can't be found.`
-
-        throw notFoundError
-      }
-
       throw error
     }
   }
