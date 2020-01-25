@@ -52,4 +52,15 @@ export default class ContentService {
       throw error
     }
   }
+
+  findContents = async (articleId, parentContentId, start, count) => {
+    try {
+      await this.articleRepository.findArticleById(articleId)
+      const contents = await this.contentRepository.findContents(articleId, parentContentId, start, count)
+
+      return contents
+    } catch (error) {
+      throw error
+    }
+  }
 }

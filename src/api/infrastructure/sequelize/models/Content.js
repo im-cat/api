@@ -1,6 +1,9 @@
 import {Model, DataTypes} from 'sequelize'
 
 export class Content extends Model {
+  static associate (models) {
+    this.hasOne(models.Member, {sourceKey: 'memberId', foreignKey: 'memberId', constraints: false})
+  }
 }
 
 export default sequelize => {

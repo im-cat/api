@@ -1,4 +1,4 @@
-import {route, POST, before} from 'awilix-express'
+import {route, POST, before, GET} from 'awilix-express'
 import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
@@ -39,6 +39,26 @@ export default class ContentController {
       await this.contentService.reportContent(memberId, req.body)
 
       return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
+  @GET()
+  index = async (req, res, next) => {
+    try {
+      const {articleId, parentContentId} = req.query
+      const start = Number(req.query.start) || 0
+      const count = Number(req.query.count) || 10
+
+      const contents = await this.contentService.findContents(articleId, parentContentId, start, count)
+      contents.items = contents.items.map(ContentSerializer.serialize)
+
+      return success(res, Status.OK)(contents)
     } catch (error) {
       if (error.message === 'NotFoundError') {
         return notFound(res, {code: error.code, message: error.details})

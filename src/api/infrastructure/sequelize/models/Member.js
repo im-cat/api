@@ -1,10 +1,14 @@
 import {Model, DataTypes} from 'sequelize'
 
 export class Member extends Model {
+  static associate (models) {
+    this.belongsTo(models.Content, {foreignKey: 'memberId', constraints: false})
+  }
 }
 
 export default sequelize => {
   return Member.init(
+
     {
       memberId: {
         type: DataTypes.INTEGER(20).UNSIGNED,
