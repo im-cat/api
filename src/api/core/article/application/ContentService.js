@@ -8,8 +8,9 @@ export default class ContentService {
   }
 
   createNewContent = async (memberId, contentReqData) => {
+    const {articleId} = contentReqData
+
     try {
-      const {articleId} = contentReqData
       const article = await this.articleRepository.findArticleById(articleId)
       const contentCount = await this.contentRepository.countContent(articleId)
       article.checkCanWriteMore(contentCount)
@@ -23,6 +24,10 @@ export default class ContentService {
 
       return {...newContent.attributes, member}
     } catch (error) {
+      if (error.message === 'ValidationError' && error.code === 'E001') {
+        this.articleRepository.updateArticleIsFinish(articleId)
+        throw error
+      }
       throw error
     }
   }

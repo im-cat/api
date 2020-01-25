@@ -13,7 +13,7 @@ export const Content = attributes({
 })(class Content {
   checkTheNumberOfLetters (letterNumberCondition) {
     if (letterNumberCondition < this.content.length) {
-      throw new ContentLengthExceedException(letterNumberCondition)
+      throw new ContentLengthExceedException()
     }
   }
 })

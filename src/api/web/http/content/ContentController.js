@@ -1,5 +1,5 @@
 import {route, POST, before} from 'awilix-express'
-import {badRequest, success} from '../../response'
+import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {ContentSerializer} from './ContentSerializer'
@@ -20,11 +20,11 @@ export default class ContentController {
       return success(res, Status.CREATED)(ContentSerializer.serialize(result))
     } catch (error) {
       if (error.message === 'NotFoundError') {
-        return badRequest(res, {code: Status.NOT_FOUND, message: error.details})
+        return notFound(res, {code: error.code, message: error.details})
       }
 
       if (error.message === 'ValidationError') {
-        return badRequest(res, {code: Status.BAD_REQUEST, message: error.details})
+        return badRequest(res, {code: error.code, message: error.details})
       }
 
       next(error)

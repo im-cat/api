@@ -1,7 +1,10 @@
+import messages from '../../../../common/messages/message'
+
 export class ContentLengthExceedException {
-  constructor (num) {
+  constructor () {
     const error = new Error('ValidationError')
-    error.details = `글자 수를 초과하였습니다. 해당 아티클의 가능한 글자 수는 ${num} 입니다.`
+    error.code = messages.E002.code
+    error.details = messages.E002.detail
 
     throw error
   }
