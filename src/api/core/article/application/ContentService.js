@@ -39,4 +39,17 @@ export default class ContentService {
       throw error
     }
   }
+
+  reportContent = async (memberId, reportReqData) => {
+    const {articleId, contentId, text} = reportReqData
+    try {
+      await this.articleRepository.findArticleById(articleId)
+      await this.contentRepository.findContentById(contentId)
+      await this.contentRepository.reportContent(memberId, articleId, contentId, text)
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }

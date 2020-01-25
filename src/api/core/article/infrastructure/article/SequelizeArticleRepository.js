@@ -53,14 +53,6 @@ export default class SequelizeArticleRepository {
 
       return articleMapper.toEntity(article)
     } catch (error) {
-      if (error.name === 'SequelizeEmptyResultError') {
-        const notFoundError = new Error('NotFoundError')
-        notFoundError.code = messages.E003.code
-        notFoundError.details = messages.E003.detail
-
-        throw notFoundError
-      }
-
       throw error
     }
   }

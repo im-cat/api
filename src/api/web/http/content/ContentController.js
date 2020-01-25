@@ -4,13 +4,13 @@ import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {ContentSerializer} from './ContentSerializer'
 
+@before(token({required: true}))
 @route('/contents')
 export default class ContentController {
   constructor ({contentService}) {
     this.contentService = contentService
   }
 
-  @before(token({required: true}))
   @POST()
   createContent = async (req, res, next) => {
     try {
@@ -25,6 +25,23 @@ export default class ContentController {
 
       if (error.message === 'ValidationError') {
         return badRequest(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
+  @route('/report')
+  @POST()
+  reportContent = async (req, res, next) => {
+    try {
+      const memberId = req.user
+      await this.contentService.reportContent(memberId, req.body)
+
+      return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
       }
 
       next(error)

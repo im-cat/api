@@ -2,8 +2,9 @@ import {SequelizeContentMapper as contentMapper} from './SequelizeContentMapper'
 import messages from '../../../../common/messages/message'
 
 export default class SequelizeContentRepository {
-  constructor ({content}) {
+  constructor ({content, report}) {
     this.contentModel = content
+    this.reportModel = report
   }
 
   async createContent (content) {
@@ -30,5 +31,31 @@ export default class SequelizeContentRepository {
       await contents.map(content => content.destroy({...options}))
     }
     return null
+  }
+
+  async findContentById (id) {
+    try {
+      const content = await this.contentModel.findByPk(id, {rejectOnEmpty: true})
+
+      return contentMapper.toEntity(content)
+    } catch (error) {
+      if (error.name === 'SequelizeEmptyResultError') {
+        const notFoundError = new Error('NotFoundError')
+        notFoundError.code = messages.E006.code
+        notFoundError.details = messages.E006.detail
+
+        throw notFoundError
+      }
+
+      throw error
+    }
+  }
+
+  reportContent (memberId, articleId, contentId, text) {
+    try {
+      return this.reportModel.create({memberId, articleId, contentId, text})
+    } catch (error) {
+      throw error
+    }
   }
 }
