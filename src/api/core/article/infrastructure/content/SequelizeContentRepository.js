@@ -1,4 +1,5 @@
 import {SequelizeContentMapper as contentMapper} from './SequelizeContentMapper'
+import messages from '../../../../common/messages/message'
 
 export default class SequelizeContentRepository {
   constructor ({content}) {
@@ -21,5 +22,13 @@ export default class SequelizeContentRepository {
 
   async countContent (articleId) {
     return this.contentModel.count({where: {articleId}})
+  }
+
+  async deleteContentByArticleId (articleId, options = {}) {
+    const contents = await this.contentModel.findAll({where: {articleId}})
+    if (contents.length > 0) {
+      await contents.map(content => content.destroy({...options}))
+    }
+    return null
   }
 }

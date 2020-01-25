@@ -27,4 +27,15 @@ export default class SequelizeArticleCountRepository {
   findArticleCount (articleId, options = {}) {
     return this.articleCountModel.findOne({attributes: ['viewCount', 'wishCount'], where: {articleId}, ...options})
   }
+
+  async deleteArticleCount (articleId, options = {}) {
+    try {
+      const articleCount = await this.articleCountModel.findOne({where: {articleId}})
+      await articleCount.destroy({...options})
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }

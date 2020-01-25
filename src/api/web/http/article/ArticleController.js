@@ -1,4 +1,4 @@
-import {route, POST, GET, before} from 'awilix-express'
+import {route, POST, GET, before, DELETE} from 'awilix-express'
 import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
@@ -65,4 +65,22 @@ export default class ArticleController {
       next(error)
     }
   }
+
+  @route('/:articleId')
+  @DELETE()
+  delete = async (req, res, next) => {
+    const {articleId} = req.params
+
+    try {
+      await this.articleService.deleteAllInfoAboutArticles(articleId)
+      return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
+        return notFound(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
 }

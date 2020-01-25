@@ -11,7 +11,8 @@ import {
   MemberToken,
   Taboo,
   Tag,
-  Content
+  Content,
+  MemberWishArticle
 } from './infrastructure/sequelize/models'
 
 const container = createContainer({
@@ -44,7 +45,8 @@ container.register({
     memberToken: asValue(MemberToken),
     taboo: asValue(Taboo),
     tag: asValue(Tag),
-    content: asValue(Content)
+    content: asValue(Content),
+    memberWishArticle: asValue(MemberWishArticle)
   }
 )
 

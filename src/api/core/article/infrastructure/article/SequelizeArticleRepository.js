@@ -4,9 +4,14 @@ import {upperCase} from 'lodash'
 import messages from '../../../../common/messages/message'
 
 export default class SequelizeArticleRepository {
-  constructor ({article, articleCount}) {
+  constructor ({article, articleCount, memberWishArticle}) {
     this.articleModel = article
     this.articleCountModel = articleCount
+    this.memberWishArticleModel = memberWishArticle
+  }
+
+  getTransaction () {
+    return this.articleModel.sequelize.transaction()
   }
 
   updateArticleIsFinish (articleId) {
@@ -44,9 +49,47 @@ export default class SequelizeArticleRepository {
 
   async findArticleById (id) {
     try {
-      const article = await this.articleModel.findByPk(id, {rejectOnEmpty: true})
+      const article = await this._getArticleById(id)
 
       return articleMapper.toEntity(article)
+    } catch (error) {
+      if (error.name === 'SequelizeEmptyResultError') {
+        const notFoundError = new Error('NotFoundError')
+        notFoundError.code = messages.E003.code
+        notFoundError.details = messages.E003.detail
+
+        throw notFoundError
+      }
+
+      throw error
+    }
+  }
+
+  async deleteArticle (articleId, options = {}) {
+    try {
+      const article = await this._getArticleById(articleId)
+      await article.destroy({...options})
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async deleteMemberWishArticle (articleId, options = {}) {
+    try {
+      const memberWishArticles = await this.memberWishArticleModel.findAll({where: {articleId}})
+      if (memberWishArticles.length > 0) {
+        await memberWishArticles.map(memberWishArticle => memberWishArticle.destroy({...options}))
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async _getArticleById (id) {
+    try {
+      return await this.articleModel.findByPk(id, {rejectOnEmpty: true})
     } catch (error) {
       if (error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError')

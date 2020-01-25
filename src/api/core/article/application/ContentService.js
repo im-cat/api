@@ -31,4 +31,12 @@ export default class ContentService {
       throw error
     }
   }
+
+  deleteContentByArticleId = async (articleId) => {
+    try {
+      await this.contentRepository.delete
+    } catch (error) {
+      throw error
+    }
+  }
 }

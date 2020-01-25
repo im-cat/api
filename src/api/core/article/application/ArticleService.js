@@ -3,10 +3,12 @@ import {ArticleCount} from '../domain/ArticleCount'
 import {TabooException} from '../domain/taboo/TabooException'
 
 export default class ArticleService {
-  constructor ({sequelizeArticleRepository, sequelizeTabooRepository, sequelizeArticleCountRepository, tagService}) {
+  constructor ({sequelizeArticleRepository, sequelizeTabooRepository, sequelizeTagRepository, sequelizeArticleCountRepository, sequelizeContentRepository, tagService}) {
     this.articleRepository = sequelizeArticleRepository
     this.tabooRepository = sequelizeTabooRepository
     this.articleCountRepository = sequelizeArticleCountRepository
+    this.tagRepository = sequelizeTagRepository
+    this.contentRepository = sequelizeContentRepository
     this.tagService = tagService
   }
 
@@ -74,11 +76,30 @@ export default class ArticleService {
         ...article.attributes,
         ...articleCount,
         tags: articleTags
-
       }
-      
+
       return result
     } catch (error) {
+      throw error
+    }
+  }
+
+  async deleteAllInfoAboutArticles (articleId) {
+    const transaction = await this.articleRepository.getTransaction()
+
+    try {
+      await this.articleRepository.deleteArticle(articleId, {transaction})
+      await this.tagRepository.deleteArticleTag(articleId, {transaction})
+      await this.contentRepository.deleteContentByArticleId(articleId, {transaction})
+      await this.articleRepository.deleteMemberWishArticle(articleId, {transaction})
+      await this.articleCountRepository.deleteArticleCount(articleId, {transaction})
+
+      await transaction.commit()
+
+      return null
+    } catch (error) {
+      await transaction.rollback()
+
       throw error
     }
   }

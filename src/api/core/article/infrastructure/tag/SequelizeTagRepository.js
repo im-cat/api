@@ -36,4 +36,17 @@ export default class SequelizeTagRepository {
     const tags = await this.tagModel.findAll({where: {tagId: tagIds}})
     return tags.map(tagMapper.toEntity)
   }
+
+  async deleteArticleTag (articleId, options = {}) {
+    try {
+      const articleTags = await this.articleTagModel.findAll({where: {articleId}})
+      if (articleTags.length > 0) {
+        await articleTags.map(articleTag => articleTag.destroy({...options}))
+      }
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }
