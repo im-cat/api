@@ -5,6 +5,14 @@ export default class SequelizeMemberRepository {
     this.memberModel = member
   }
 
+  findMemberByMemberId (memberId) {
+    try {
+      return this.memberModel.findOne({where: {memberId}, raw: true})
+    } catch (error) {
+      throw error
+    }
+  }
+
   findMemberByLoginId (loginId) {
     try {
       return this.memberModel.findOne({where: {loginId}, raw: true})

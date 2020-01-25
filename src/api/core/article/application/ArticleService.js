@@ -1,4 +1,4 @@
-import {Article} from '../domain/Article'
+import {Article} from '../domain/article/Article'
 import {ArticleCount} from '../domain/ArticleCount'
 import {TabooException} from '../domain/taboo/TabooException'
 

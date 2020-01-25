@@ -18,4 +18,8 @@ export default class SequelizeContentRepository {
     const newContent = await this.contentModel.create(contentMapper.toDatabase(content))
     return contentMapper.toEntity(newContent)
   }
+
+  async countContent (articleId) {
+    return this.contentModel.count({where: {articleId}})
+  }
 }

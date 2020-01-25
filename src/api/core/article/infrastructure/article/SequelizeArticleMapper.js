@@ -1,4 +1,4 @@
-import {Article} from '../../domain/Article'
+import {Article} from '../../domain/article/Article'
 
 export const SequelizeArticleMapper = {
   toEntity ({dataValues}) {

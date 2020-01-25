@@ -1,4 +1,5 @@
 import {attributes} from 'structure'
+import {ArticleFinishConditionExceedException} from './ArticleFinishConditionExceedException'
 
 export const Article = attributes({
   articleId: {type: Number},
@@ -12,4 +13,9 @@ export const Article = attributes({
   updatedAt: {type: Date},
   deletedAt: {type: Date},
 })(class Article {
+  checkCanWriteMore (contentCount) {
+    if (this.finishCondition <= contentCount) {
+      return new ArticleFinishConditionExceedException()
+    }
+  }
 })

@@ -1,4 +1,4 @@
-import {Article} from '../../../../../src/api/core/article/domain/Article'
+import {Article} from '../../../../../src/api/core/article/domain/article/Article'
 
 test('아티클을 생성할 수 있다.', async () => {
 
