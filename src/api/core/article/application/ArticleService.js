@@ -25,7 +25,6 @@ export default class ArticleService {
       }
 
       await this._checkTaboo(title)
-      await this._checkTaboo(tags)
 
       const newArticle = await this.articleRepository.createArticle(article)
 
@@ -34,9 +33,13 @@ export default class ArticleService {
       const articleCountDomain = new ArticleCount({articleId})
       await this.articleCountRepository.createArticleCount(articleCountDomain)
 
-      const generatedTags = await this.tagService.createTag(tags, articleId)
+      if (tags.length > 0) {
+        await this._checkTaboo(tags)
+        const generatedTags = await this.tagService.createTag(tags, articleId)
+        return {...newArticle.attributes, tags: generatedTags}
+      }
 
-      return {...newArticle.attributes, tags: generatedTags}
+      return {...newArticle.attributes, tags: []}
     } catch (error) {
       throw error
     }
