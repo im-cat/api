@@ -27,10 +27,9 @@ export default class SequelizeArticleRepository {
     return articleMapper.toEntity(newArticle)
   }
 
-  async findAndCountAllArticle (start, count, type) {
+  async findAndCountAllArticle (start, count, type, memberId) {
     try {
-
-      const condition = this._createConditionByType(start, count, type)
+      const condition = this._createConditionByType(start, count, type, memberId)
 
       const {count: total, rows} = await this.articleCountModel.findAndCountAll({...condition})
 
@@ -120,8 +119,15 @@ export default class SequelizeArticleRepository {
     }
   }
 
-  _createConditionByType (start, count, type) {
+  _createConditionByType (start, count, type, memberId = null) {
+    let condition = {}
     let order = {}
+
+    if (memberId) {
+      condition = {where: {memberId}}
+      order = {order: [[this.articleModel, 'updatedAt', 'DESC']]}
+    }
+
     if (upperCase(type) === VIEW_TYPE.FINISH) {
       order = {order: [[this.articleModel, 'updatedAt', 'DESC']]}
     }
@@ -139,6 +145,7 @@ export default class SequelizeArticleRepository {
       include: [{
         attributes: {exclude: ['letterNumber', 'finishCondition']},
         model: this.articleModel,
+        ...condition
       }],
       ...order,
       offset: start,

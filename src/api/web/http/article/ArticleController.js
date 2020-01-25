@@ -3,8 +3,6 @@ import {badRequest, notFound, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {ArticleSerializer} from './ArticleSerializer'
-import {upperCase} from 'lodash'
-import {VIEW_TYPES} from '../../../common/viewType'
 
 @before(token({required: true}))
 @route('/articles')
@@ -33,12 +31,10 @@ export default class ArticleController {
   index = async (req, res, next) => {
     const start = Number(req.query.start) || 0
     const count = Number(req.query.count) || 10
-    const {type} = req.query
+    const {type, memberId} = req.query
 
     try {
-      if (VIEW_TYPES.indexOf(upperCase(type)) === -1) return badRequest(res, {message: 'Invalid type'})
-
-      const articles = await this.articleService.findAllArticle(start, count, type)
+      const articles = await this.articleService.findAllArticle(start, count, type, memberId)
 
       articles.items = articles.items.map(ArticleSerializer.serializeForGet)
 

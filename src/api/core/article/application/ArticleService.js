@@ -47,9 +47,9 @@ export default class ArticleService {
     }
   }
 
-  async findAllArticle (start, count, type) {
+  async findAllArticle (start, count, type, memberId) {
     try {
-      const articles = await this.articleRepository.findAndCountAllArticle(start, count, type)
+      const articles = await this.articleRepository.findAndCountAllArticle(start, count, type, memberId)
 
       let result = {}
       result.items = articles.items
