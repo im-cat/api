@@ -18,7 +18,7 @@ export default class AuthController {
       return success(res, 200)({token})
     } catch (error) {
       if (error.message === 'ValidationError') {
-        return badRequest(res, {message: error.details})
+        return badRequest(res, {code: error.code, message: error.details})
       }
 
       next(error)

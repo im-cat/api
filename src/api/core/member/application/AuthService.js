@@ -2,6 +2,7 @@ import Moment from 'moment'
 import {sign} from '../../../common/jwt'
 import {MemberToken} from '../domain/MemberToken'
 import crypto from 'crypto'
+import {MemberIsDisabledException} from '../domain/member/MemberIsDisabledException'
 
 export default class AuthService {
   constructor ({sequelizeMemberRepository, sequelizeMemberTokenRepository}) {
@@ -12,6 +13,10 @@ export default class AuthService {
   async login (loginId) {
     try {
       const member = await this.memberRepository.findMemberByLoginId(loginId)
+      if (member.disabled === 1) {
+        throw new MemberIsDisabledException()
+      }
+
       const expireAt = Moment(new Date()).add(1, 'year')
 
       if (member) {
