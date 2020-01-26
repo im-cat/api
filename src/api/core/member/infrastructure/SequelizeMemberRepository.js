@@ -21,9 +21,10 @@ export default class SequelizeMemberRepository {
     }
   }
 
-  async createMember (loginId) {
+  async createMember (loginId, icon) {
     try {
-      const newMember = await this.memberModel.create({loginId, loginService: 'apple'})
+      const newMember = await this.memberModel.create({loginId, icon
+        , loginService: 'apple'})
 
       return MemberMapper.toEntity(newMember)
     } catch (error) {

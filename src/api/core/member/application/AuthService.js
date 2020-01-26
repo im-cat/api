@@ -1,6 +1,7 @@
 import Moment from 'moment'
 import {sign} from '../../../common/jwt'
 import {MemberToken} from '../domain/MemberToken'
+import crypto from 'crypto'
 
 export default class AuthService {
   constructor ({sequelizeMemberRepository, sequelizeMemberTokenRepository}) {
@@ -26,7 +27,9 @@ export default class AuthService {
         return newMemberToken.accessToken
       }
 
-      const newMember = await this.memberRepository.createMember(loginId)
+      const hash = crypto.createHash('md5').update(loginId).digest('hex')
+      const icon = `https://gravatar.com/avatar/${hash}?d=identicon`
+      const newMember = await this.memberRepository.createMember(loginId, icon)
       const newMemberToken = await this._createNewMemberToken(newMember.memberId, expireAt)
 
       return newMemberToken.accessToken
