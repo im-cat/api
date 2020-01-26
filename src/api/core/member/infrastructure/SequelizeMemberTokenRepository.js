@@ -5,9 +5,7 @@ export default class SequelizeMemberTokenRepository {
     this.memberTokenModel = memberToken
   }
 
-  async updateMemberTokenExpire (memberId, expireAt) {
-    const memberToken = await this._getMemberToken(memberId)
-
+  async updateMemberTokenExpire (memberToken, expireAt) {
     const transaction = await this.memberTokenModel.sequelize.transaction()
 
     try {
@@ -48,7 +46,7 @@ export default class SequelizeMemberTokenRepository {
     return MemberTokenMapper.toEntity(newMemberToken)
   }
 
-  async _getMemberToken (memberId) {
+  async findMemberToken (memberId) {
     try {
       return this.memberTokenModel.findOne({where: {memberId}})
     } catch (error) {

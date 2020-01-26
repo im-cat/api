@@ -3,15 +3,15 @@ import {success, badRequest} from '../../response'
 
 @route('/auth')
 export default class AuthController {
-  constructor ({memberService}) {
-    this.memberService = memberService
+  constructor ({authService}) {
+    this.authService = authService
   }
 
   @POST()
   login = async (req, res, next) => {
     try {
       const {id: loginId} = req.body
-      const token = await this.memberService.login(loginId)
+      const token = await this.authService.login(loginId)
 
       return success(res, 200)({token})
     } catch (error) {
