@@ -93,6 +93,14 @@ export default class SequelizeMemberRepository {
 
   }
 
+  findFollow (followerId, followingId) {
+    try {
+      return this.followModel.findOne({where: {followerId, followingId}})
+    } catch (error) {
+      throw error
+    }
+  }
+
   createFollow (followerId, followingId) {
     try {
       return this.followModel.create({followerId, followingId})
@@ -101,12 +109,9 @@ export default class SequelizeMemberRepository {
     }
   }
 
-  async deleteFollow (followerId, followingId) {
+  async deleteFollow (follow) {
     try {
-      const follow = await this.followModel.findOne({where: {followerId, followingId}})
-      if (follow) {
-        await follow.destroy()
-      }
+      await follow.destroy()
       return null
     } catch (error) {
       throw error

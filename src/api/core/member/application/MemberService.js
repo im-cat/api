@@ -1,5 +1,8 @@
 import {MemberNicknameLengthException} from '../domain/member/MemberNicknameLengthException'
 import {MemberNicknameDuplicateException} from '../domain/member/MemberNicknameDuplicateException'
+import {MemberCannotFollowException} from '../domain/member/MemberCannotFollowException'
+import {MemberAlreadyFollowException} from '../domain/member/MemberAlreadyFollowException'
+import {MemberCannotUnFollowException} from '../domain/member/MemberCannotUnFollowException'
 
 export default class MemberService {
   constructor ({sequelizeMemberRepository, sequelizeArticleRepository}) {
@@ -32,17 +35,40 @@ export default class MemberService {
     }
   }
 
-  followMember (followerId, followingId) {
+  async followMember (followerId, followingId) {
     try {
+      const member = await this.memberRepository.findMemberByMemberId(followingId)
+
+      if (Number(followerId) === Number(followingId) || !member) {
+        throw new MemberCannotFollowException()
+      }
+
+      const existFollow = await this.memberRepository.findFollow(followerId, followingId)
+
+      if (existFollow) {
+        throw new MemberAlreadyFollowException()
+      }
       return this.memberRepository.createFollow(followerId, followingId)
     } catch (error) {
       throw error
     }
   }
 
-  unFollowMember (followerId, followingId) {
+  async unFollowMember (followerId, followingId) {
     try {
-      return this.memberRepository.deleteFollow(followerId, followingId)
+      const member = await this.memberRepository.findMemberByMemberId(followingId)
+
+      if (Number(followerId) === Number(followingId) || !member) {
+        throw new MemberCannotUnFollowException()
+      }
+
+      const existFollow = await this.memberRepository.findFollow(followerId, followingId)
+
+      if (!existFollow) {
+        throw new MemberCannotUnFollowException()
+      }
+
+      return this.memberRepository.deleteFollow(existFollow)
     } catch (error) {
       throw error
     }
