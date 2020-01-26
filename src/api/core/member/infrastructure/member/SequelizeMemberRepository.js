@@ -1,8 +1,9 @@
 import {SequelizeMemberMapper as MemberMapper} from './SequelizeMemberMapper'
 
 export default class SequelizeMemberRepository {
-  constructor ({member}) {
+  constructor ({member, follow}) {
     this.memberModel = member
+    this.followModel = follow
   }
 
   findMemberByMemberId (memberId) {
@@ -82,5 +83,24 @@ export default class SequelizeMemberRepository {
 
   async _getMemberByMemberId (memberId) {
     return this.memberModel.findOne({where: {memberId}})
+  }
+
+  createFollow (followerId, followingId) {
+    try {
+      return this.followModel.create({followerId, followingId})
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async deleteFollow (followerId, followingId) {
+    try {
+      const follow = await this.followModel.findOne({where: {followerId, followingId}})
+      await follow.destroy()
+
+      return null
+    } catch (error) {
+      throw error
+    }
   }
 }

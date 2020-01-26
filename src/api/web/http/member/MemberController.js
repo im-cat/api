@@ -1,4 +1,4 @@
-import {route, before, PATCH, GET} from 'awilix-express'
+import {route, before, PATCH, GET, POST, DELETE} from 'awilix-express'
 import {badRequest, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
@@ -35,6 +35,42 @@ export default class ContentController {
 
       return success(res, Status.OK)(MemberSerializer.serialize(result))
     } catch (error) {
+      next(error)
+    }
+  }
+
+  @route('/:memberId/follow')
+  @POST()
+  follow = async (req, res, next) => {
+    try {
+      const followerId = req.user
+      const {memberId: followingId} = req.params
+      await this.memberService.followMember(followerId, followingId)
+
+      return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'ValidationError') {
+        return badRequest(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
+  @route('/:memberId/follow')
+  @DELETE()
+  unFollow = async (req, res, next) => {
+    try {
+      const followerId = req.user
+      const {memberId: followingId} = req.params
+      await this.memberService.unFollowMember(followerId, followingId)
+
+      return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'ValidationError') {
+        return badRequest(res, {code: error.code, message: error.details})
+      }
+
       next(error)
     }
   }

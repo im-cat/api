@@ -13,7 +13,8 @@ import {
   Tag,
   Content,
   MemberWishArticle,
-  Report
+  Report,
+  Follow
 } from './infrastructure/sequelize/models'
 
 const container = createContainer({
@@ -49,6 +50,7 @@ container.register({
     content: asValue(Content),
     memberWishArticle: asValue(MemberWishArticle),
     report: asValue(Report),
+    follow: asValue(Follow),
   }
 )
 

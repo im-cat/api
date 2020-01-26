@@ -31,6 +31,22 @@ export default class MemberService {
     }
   }
 
+  followMember (followerId, followingId) {
+    try {
+      return this.memberRepository.createFollow(followerId, followingId)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  unFollowMember (followerId, followingId) {
+    try {
+      return this.memberRepository.deleteFollow(followerId, followingId)
+    } catch (error) {
+      throw error
+    }
+  }
+
   _nickNameLengthCheck (nickname) {
     if (nickname.length > 10) {
       throw new MemberNicknameLengthException()
