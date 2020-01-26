@@ -30,6 +30,12 @@ export default sequelize => {
         allowNull: false,
         comment: '본문'
       },
+      image: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        defaultValue: '',
+        comment: '이미지'
+      },
       letterNumber: {
         type: DataTypes.INTEGER(5).UNSIGNED,
         defaultValue: 50,

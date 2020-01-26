@@ -13,13 +13,13 @@ export default class AuthService {
   async login (loginId) {
     try {
       const member = await this.memberRepository.findMemberByLoginId(loginId)
-      if (member.disabled === 1) {
-        throw new MemberIsDisabledException()
-      }
-
       const expireAt = Moment(new Date()).add(1, 'year')
 
       if (member) {
+        if (member.disabled === 1) {
+          throw new MemberIsDisabledException()
+        }
+
         let newMemberToken = {}
         const memberToken = await this.memberTokenRepository.findMemberToken(member.memberId)
 
@@ -34,6 +34,7 @@ export default class AuthService {
 
       const hash = crypto.createHash('md5').update(loginId).digest('hex')
       const icon = `https://gravatar.com/avatar/${hash}?d=identicon`
+
       const newMember = await this.memberRepository.createMember(loginId, icon)
       const newMemberToken = await this._createNewMemberToken(newMember.memberId, expireAt)
 

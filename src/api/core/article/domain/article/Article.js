@@ -6,6 +6,7 @@ export const Article = attributes({
   memberId: {type: Number, required: true},
   title: {type: String, required: true},
   mainText: {type: String, required: true},
+  image: {type: String},
   letterNumber: {type: Number},
   finishCondition: {type: Number},
   isFinish: {type: Number},
