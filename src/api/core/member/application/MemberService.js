@@ -2,8 +2,9 @@ import {MemberNicknameLengthException} from '../domain/member/MemberNicknameLeng
 import {MemberNicknameDuplicateException} from '../domain/member/MemberNicknameDuplicateException'
 
 export default class MemberService {
-  constructor ({sequelizeMemberRepository}) {
+  constructor ({sequelizeMemberRepository, sequelizeArticleRepository}) {
     this.memberRepository = sequelizeMemberRepository
+    this.articleRepository = sequelizeArticleRepository
   }
 
   async updateMember (memberId, memberReqData) {
@@ -42,6 +43,24 @@ export default class MemberService {
   unFollowMember (followerId, followingId) {
     try {
       return this.memberRepository.deleteFollow(followerId, followingId)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async findMyWishArticle (memberId, start, count) {
+    try {
+      const wishArticleIds = await this.articleRepository.findAllMemberWishArticleIds(memberId, start, count)
+      const articles = await this.articleRepository.findAndCountAllArticle(start, count, null, null, wishArticleIds.items)
+
+      const result = {
+        items: articles.items,
+        total: wishArticleIds.total,
+        start,
+        count
+      }
+
+      return result
     } catch (error) {
       throw error
     }

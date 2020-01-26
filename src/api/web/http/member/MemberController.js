@@ -3,6 +3,7 @@ import {badRequest, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {MemberSerializer} from './MemberSerializer'
+import {ArticleSerializer} from '../article/ArticleSerializer'
 
 @before(token({required: true}))
 @route('/members')
@@ -66,6 +67,28 @@ export default class ContentController {
       await this.memberService.unFollowMember(followerId, followingId)
 
       return res.status(Status.OK).end()
+    } catch (error) {
+      if (error.message === 'ValidationError') {
+        return badRequest(res, {code: error.code, message: error.details})
+      }
+
+      next(error)
+    }
+  }
+
+  @route('/wish-articles')
+  @GET()
+  findMyWishArticle = async (req, res, next) => {
+    try {
+      const memberId = req.user
+      const start = Number(req.query.start) || 0
+      const count = Number(req.query.count) || 10
+
+      const articles = await this.memberService.findMyWishArticle(memberId, start, count)
+
+      articles.items = articles.items.map(ArticleSerializer.serializeForGet)
+
+      return success(res, Status.OK)(articles)
     } catch (error) {
       if (error.message === 'ValidationError') {
         return badRequest(res, {code: error.code, message: error.details})
