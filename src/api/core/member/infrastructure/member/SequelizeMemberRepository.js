@@ -53,6 +53,18 @@ export default class SequelizeMemberRepository {
     }
   }
 
+  async findAllMember (memberIds) {
+    try {
+      const members = await this.memberModel.findAll({
+        where: {memberId: memberIds}
+      })
+
+      return members.map(MemberMapper.toEntity)
+    } catch (error) {
+      throw error
+    }
+  }
+
   async updateMember (memberId, memberReqData) {
     const transaction = await this.memberModel.sequelize.transaction()
 
@@ -81,10 +93,6 @@ export default class SequelizeMemberRepository {
 
   }
 
-  async _getMemberByMemberId (memberId) {
-    return this.memberModel.findOne({where: {memberId}})
-  }
-
   createFollow (followerId, followingId) {
     try {
       return this.followModel.create({followerId, followingId})
@@ -103,4 +111,27 @@ export default class SequelizeMemberRepository {
       throw error
     }
   }
+
+  async findFollowerIds (memberId, start, count) {
+    try {
+      const {count: total, rows} = await this.followModel.findAndCountAll({
+        attributes: ['followerId'],
+        where: {followingId: memberId},
+        offset: start,
+        limit: count
+      })
+
+      return {
+        items: rows.map(row => row.followerId),
+        total
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async _getMemberByMemberId (memberId) {
+    return this.memberModel.findOne({where: {memberId}})
+  }
+
 }

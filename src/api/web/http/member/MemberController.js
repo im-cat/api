@@ -76,6 +76,24 @@ export default class ContentController {
     }
   }
 
+  @route('/followers')
+  @GET()
+  findFollowerList = async (req, res, next) => {
+    try {
+      const memberId = req.user
+      const start = Number(req.query.start) || 0
+      const count = Number(req.query.count) || 10
+
+      const followers = await this.memberService.findFollowerList(memberId, start, count)
+
+      followers.items = followers.items.map(MemberSerializer.serialize)
+
+      return success(res, Status.OK)(followers)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   @route('/wish-articles')
   @GET()
   findMyWishArticle = async (req, res, next) => {

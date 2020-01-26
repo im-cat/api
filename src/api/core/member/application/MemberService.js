@@ -66,6 +66,17 @@ export default class MemberService {
     }
   }
 
+  async findFollowerList (memberId, start, count) {
+    try {
+      const followerIds = await this.memberRepository.findFollowerIds(memberId, start, count)
+      const followers = await this.memberRepository.findAllMember(followerIds.items)
+
+      return {total: followerIds.total, items: followers, start, count}
+    } catch (error) {
+      throw error
+    }
+  }
+
   _nickNameLengthCheck (nickname) {
     if (nickname.length > 10) {
       throw new MemberNicknameLengthException()
