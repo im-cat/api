@@ -1,4 +1,4 @@
-import {route, before, PATCH} from 'awilix-express'
+import {route, before, PATCH, GET} from 'awilix-express'
 import {badRequest, success} from '../../response'
 import {token} from '../../../common/passport'
 import Status from 'http-status'
@@ -23,6 +23,18 @@ export default class ContentController {
         return badRequest(res, {code: error.code, message: error.details})
       }
 
+      next(error)
+    }
+  }
+
+  @GET()
+  findMember = async (req, res, next) => {
+    try {
+      const memberId = req.user
+      const result = await this.memberService.findMember(memberId)
+
+      return success(res, Status.OK)(MemberSerializer.serialize(result))
+    } catch (error) {
       next(error)
     }
   }

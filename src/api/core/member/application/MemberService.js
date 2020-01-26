@@ -23,6 +23,14 @@ export default class MemberService {
     }
   }
 
+  async findMember (memberId) {
+    try {
+      return this.memberRepository.findMember(memberId)
+    } catch (error) {
+      throw error
+    }
+  }
+
   _nickNameLengthCheck (nickname) {
     if (nickname.length > 10) {
       throw new MemberNicknameLengthException()

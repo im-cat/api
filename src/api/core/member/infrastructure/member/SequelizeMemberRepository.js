@@ -42,11 +42,21 @@ export default class SequelizeMemberRepository {
     }
   }
 
+  async findMember (memberId) {
+    try {
+      const member = await this._getMemberByMemberId(memberId)
+
+      return MemberMapper.toEntity(member)
+    } catch (error) {
+      throw error
+    }
+  }
+
   async updateMember (memberId, memberReqData) {
     const transaction = await this.memberModel.sequelize.transaction()
 
     try {
-      const member = await this.memberModel.findOne({where: {memberId}})
+      const member = await this._getMemberByMemberId(memberId)
       const updatedMember = await member.update(MemberMapper.toDatabase(memberReqData), {transaction})
       const memberEntity = MemberMapper.toEntity(updatedMember)
 
@@ -68,5 +78,9 @@ export default class SequelizeMemberRepository {
       throw error
     }
 
+  }
+
+  async _getMemberByMemberId (memberId) {
+    return this.memberModel.findOne({where: {memberId}})
   }
 }
