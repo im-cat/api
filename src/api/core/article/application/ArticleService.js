@@ -106,6 +106,7 @@ export default class ArticleService {
 
   async wishOrUnWishArticle (memberId, articleId) {
     try {
+      await this.articleRepository.findArticleById(articleId)
       const memberWishArticle = await this.articleRepository.findMemberWishArticle(memberId, articleId)
 
       if (memberWishArticle) {
