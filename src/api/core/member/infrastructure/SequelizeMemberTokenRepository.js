@@ -53,4 +53,13 @@ export default class SequelizeMemberTokenRepository {
       throw error
     }
   }
+
+  async deleteMemberToken (memberToken) {
+    try {
+      await memberToken.destroy()
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }

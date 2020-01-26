@@ -38,6 +38,17 @@ export default class AuthService {
     }
   }
 
+  async logout (memberId) {
+    try {
+      const memberToken = await this.memberTokenRepository.findMemberToken(memberId)
+      await this.memberTokenRepository.deleteMemberToken(memberToken)
+
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
+
   async _createNewMemberToken (memberId, expireAt) {
     const newToken = await sign(memberId)
 
