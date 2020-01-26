@@ -4,6 +4,7 @@ import {token} from '../../../common/passport'
 import Status from 'http-status'
 import {MemberSerializer} from './MemberSerializer'
 import {ArticleSerializer} from '../article/ArticleSerializer'
+import {upperCase} from 'lodash'
 
 @before(token({required: true}))
 @route('/members')
@@ -76,19 +77,27 @@ export default class ContentController {
     }
   }
 
-  @route('/followers')
+  @route('/follow')
   @GET()
   findFollowerList = async (req, res, next) => {
     try {
       const memberId = req.user
+      const type = req.query.type
       const start = Number(req.query.start) || 0
       const count = Number(req.query.count) || 10
 
-      const followers = await this.memberService.findFollowerList(memberId, start, count)
+      if (['FOLLOWER', 'FOLLOWING'].indexOf(upperCase(type)) === -1) {
+        const error = new Error('ValidationError')
+        error.details = 'Invalid type'
 
-      followers.items = followers.items.map(MemberSerializer.serialize)
+        return badRequest(res, {message: error.details})
+      }
 
-      return success(res, Status.OK)(followers)
+      const follows = await this.memberService.findFollowList(memberId, start, count, type)
+
+      follows.items = follows.items.map(MemberSerializer.serialize)
+
+      return success(res, Status.OK)(follows)
     } catch (error) {
       next(error)
     }

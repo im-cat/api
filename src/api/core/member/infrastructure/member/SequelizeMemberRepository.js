@@ -113,17 +113,31 @@ export default class SequelizeMemberRepository {
     }
   }
 
-  async findFollowerIds (memberId, start, count) {
+  async findFollowIds (memberId, start, count, type) {
     try {
+      let condition = {}
+
+      if (type === 'follower') {
+        condition = {
+          attributes: ['followerId'],
+          where: {followingId: memberId},
+        }
+      }
+      if (type === 'following') {
+        condition = {
+          attributes: ['followingId'],
+          where: {followerId: memberId},
+        }
+      }
+
       const {count: total, rows} = await this.followModel.findAndCountAll({
-        attributes: ['followerId'],
-        where: {followingId: memberId},
+        ...condition,
         offset: start,
         limit: count
       })
 
       return {
-        items: rows.map(row => row.followerId),
+        items: (type === 'following') ? rows.map(row => row.followingId) : rows.map(row => row.followerId),
         total
       }
     } catch (error) {

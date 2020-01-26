@@ -66,12 +66,12 @@ export default class MemberService {
     }
   }
 
-  async findFollowerList (memberId, start, count) {
+  async findFollowList (memberId, start, count, type) {
     try {
-      const followerIds = await this.memberRepository.findFollowerIds(memberId, start, count)
-      const followers = await this.memberRepository.findAllMember(followerIds.items)
+      const followIds = await this.memberRepository.findFollowIds(memberId, start, count, type)
+      const follows = await this.memberRepository.findAllMember(followIds.items)
 
-      return {total: followerIds.total, items: followers, start, count}
+      return {total: followIds.total, items: follows, start, count}
     } catch (error) {
       throw error
     }
