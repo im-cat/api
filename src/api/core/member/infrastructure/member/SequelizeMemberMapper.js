@@ -1,4 +1,4 @@
-import {Member} from '../domain/Member'
+import {Member} from '../../domain/member/Member'
 
 export const SequelizeMemberMapper = {
   toEntity ({dataValues}) {
@@ -34,8 +34,8 @@ export const SequelizeMemberMapper = {
   },
 
   toDatabase (dataValues) {
-    const {loginId, nickname, loginService, age, gender, icon, role} = dataValues
+    const {nickname, age, gender, icon} = dataValues
 
-    return {loginId, nickname, loginService, age, gender, icon, role}
+    return {nickname, age, gender, icon}
   },
 }

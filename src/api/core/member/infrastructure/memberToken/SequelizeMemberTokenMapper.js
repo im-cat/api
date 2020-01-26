@@ -1,4 +1,4 @@
-import {MemberToken} from '../domain/MemberToken'
+import {MemberToken} from '../../domain/MemberToken'
 
 export const SequelizeMemberTokenMapper = {
   toEntity ({dataValues}) {
