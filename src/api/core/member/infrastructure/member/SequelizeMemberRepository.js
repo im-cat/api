@@ -104,8 +104,9 @@ export default class SequelizeMemberRepository {
   async deleteFollow (followerId, followingId) {
     try {
       const follow = await this.followModel.findOne({where: {followerId, followingId}})
-      await follow.destroy()
-
+      if (follow) {
+        await follow.destroy()
+      }
       return null
     } catch (error) {
       throw error

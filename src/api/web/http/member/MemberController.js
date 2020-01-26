@@ -48,7 +48,7 @@ export default class ContentController {
       const {memberId: followingId} = req.params
       await this.memberService.followMember(followerId, followingId)
 
-      return res.status(Status.OK).end()
+      return success(res, Status.OK)({created: true})
     } catch (error) {
       if (error.message === 'ValidationError') {
         return badRequest(res, {code: error.code, message: error.details})
@@ -66,7 +66,7 @@ export default class ContentController {
       const {memberId: followingId} = req.params
       await this.memberService.unFollowMember(followerId, followingId)
 
-      return res.status(Status.OK).end()
+      return success(res, Status.OK)({deleted: true})
     } catch (error) {
       if (error.message === 'ValidationError') {
         return badRequest(res, {code: error.code, message: error.details})
